@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AJ MART — Asian Groceries & Daily Essentials</title>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="brand-wrap">
+    <div class="brand">
+      <div class="logo-crest" aria-hidden="true">
+        <h2>AJ<br>MART</h2>
+      </div>
+      <div class="logo-sub">
+        <div class="mall">Asian Groceries & Daily Essentials</div>
+        <div style="height:8px"></div>
+        <div style="width:120px;height:6px;background:var(--gold);border-radius:6px;margin:6px auto 0"></div>
+      </div>
+    </div>
+    <div class="info">
+      <div class="title">📍154 Abercromby Street, G40 2SA</div>
+      <p> 🕔 Mon - Fri 9am - 8pm<br>Sat - Sun 9am - 8pm</p>
+      <p>📞+447525652690 &nbsp;</p>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <input id="search" placeholder="Search products by name..." oninput="renderProducts()" />
+  <div class="categories" id="categories"></div>
+  <div class="counter" id="resultCounter"></div>
+</div>
+
+<main class="main">
+  <section id="list">
+    <div id="count" style="max-width:1100px;margin:0 auto;padding:0 16px;color:var(--muted)"></div>
+    <div class="grid" id="products"></div>
+  </section>
+
+  <section class="footer" id="about-contact" aria-label="About and contact">
+    <div class="col about">
+      <h4>About AJ MART</h4>
+      <p>AJ MART is a local Asian grocery in Glasgow offering fresh produce, spices, rice, snacks, frozen goods and everyday essentials. We stock a wide range of items from South Asia and beyond at competitive prices.</p>
+      <p>Shop in-store at 154 Abercromby Street or browse our product list. Call or message us for orders and deliveries.</p>
+    </div>
+    <div class="col contact">
+      <h4>Contact & Opening Hours</h4>
+      <p class="address">📌Address: <strong>154 ABERCROMBY STREET, G40 2SA</strong></p>
+      <p>☎️Phone: <strong>+44 7525 652690</strong></p>
+      <p>🕔Hours: <strong>Mon - Sun 9am - 8pm</strong></p>
+      <p>✉️Email: <strong>ajmart.glasgow@gmail.com</strong></p>
+    </div>
+  </section>
+</main>
+
+<script>
+const PRODUCTS = [
+{ id: 1, name: "Pavizham Vadi Matta Rice 10KG", price: 14.99, category: "Rice" },
+{ id: 2, name: "Pavizham Vadi Matta Rice 5KG", price: 8.49, category: "Rice" },
+{ id: 3, name: "Saras Vadi Matta Rice 10KG", price: 12.99, category: "Rice" },
+{ id: 4, name: "Ajmi Matta Rice 10KG", price: 12.99, category: "Rice" },
+{ id: 5, name: "Ajmi Matta Rice 5KG", price: 7.99, category: "Rice" },
+{ id: 6, name: "Double Horse Matta Rice 10KG", price: 14.99, category: "Rice" },
+{ id: 7, name: "Double Horse Matta Rice 5KG", price: 8.99, category: "Rice" },
+{ id: 8, name: "Kottackal Matta Vadi 10KG", price: 10.99, category: "Rice" },
+{ id: 9, name: "Mayil Matta Vadi 10KG", price: 11.99, category: "Rice" },
+{ id: 10, name: "Periyar Matta Rice 10KG", price: 13.99, category: "Rice" },
+{ id: 11, name: "Green Valley Matta Rice", price: 12.99, category: "Rice" },
+{ id: 12, name: "Village Farmer Matta Rice 10KG", price: 12.99, category: "Rice" },
+{ id: 13, name: "Palat Matta Rice 10KG", price: 12.59, category: "Rice" },
+{ id: 14, name: "Palat Matta Rice 5KG", price: 6.99, category: "Rice" },
+{ id: 15, name: "Nirmal Matta Rice 10KG", price: 10.99, category: "Rice" },
+{ id: 16, name: "Nirmal Matta Rice 5KG", price: 6.99, category: "Rice" },
+{ id: 17, name: "Nirmal Jaya Rice 10KG", price: 13.99, category: "Rice" },
+{ id: 18, name: "Nirmal Jaya Rice 5KG", price: 7.99, category: "Rice" },
+{ id: 19, name: "Golden Tropics Easy Cook Rice 10KG", price: 8.99, category: "Rice" },
+{ id: 20, name: "India Gate Sona Masoori Rice 10KG", price: 15.99, category: "Rice" },
+{ id: 21, name: "Heer Superior Basmati Rice Extra Long 10KG", price: 20.99, category: "Rice" },
+{ id: 22, name: "Double Horse Ponni Rice 5KG", price: 11.49, category: "Rice" },
+{ id: 23, name: "Malabar Choice Biryani Rice (long grain basmati) 5KG", price: 12.99, category: "Rice" },
+{ id: 24, name: "Village Farmer Extra Long Grain XXXL Basmati Rice 5KG", price: 10.99, category: "Rice" },
+{ id: 25, name: "India Gate Basmati Rice 5KG", price: 14.99, category: "Rice" },
+{ id: 26, name: "Ajmi Kaima Rice (Jeerakasala Rice) 5KG", price: 15.99, category: "Rice" },
+{ id: 27, name: "Ajmi Kaima Rice (Jeerakasala Rice) 1KG", price: 3.59, category: "Rice" },
+{ id: 28, name: "Udhaiyam Rice 5KG", price: 9.99, category: "Rice" },
+{ id: 29, name: "Village Farmer Idly Rice 5KG", price: 8.99, category: "Rice" },
+{ id: 30, name: "Nirmal Idly Rice 2KG", price: 3.99, category: "Rice" },
+{ id: 31, name: "Palat Wayanadan Kaima Rice (Jeerakasala Rice) 5KG", price: 12.99, category: "Rice" },
+{ id: 32, name: "Palat Wayanadan Kaima Rice (Jeerakasala Rice) 2KG", price: 6.49, category: "Rice" },
+{ id: 33, name: "India Gate Jeerakasala Rice 2KG", price: 7.49, category: "Rice" },
+{ id: 34, name: "Kohinoor Gold Basmati Rice 2KG", price: 4.99, category: "Rice" },
+{ id: 35, name: "Tilda Pure Original Basmati 5KG", price: 13.99, category: "Rice" },
+{ id: 36, name: "Tilda Pure Original Basmati 2KG", price: 5.99, category: "Rice" },
+{ id: 37, name: "Tilda Everyday Basmati Rice 4KG", price: 6.99, category: "Rice" },
+{ id: 38, name: "Palat Raw Rice (Pachari) 2KG", price: 3.49, category: "Rice" },
+{ id: 39, name: "Palat Sella Basmati Rice 1KG", price: 3.29, category: "Rice" },
+{ id: 40, name: "Nirmal Matta Raw Rice (pachari) 1KG", price: 2.69, category: "Rice" },
+{ id: 41, name: "Palat Broken Wheat 1KG", price: 2.99, category: "Rice" },
+{ id: 42, name: "Ajmi Matta Broken Rice 1KG", price: 2.99, category: "Rice" },
+{ id: 43, name: "Periyar Puttu Podi White 1KG", price: 2.99, category: "Puttu Podi" },
+{ id: 44, name: "Periyar Corn Puttu Podi 1KG", price: 2.79, category: "Puttu Podi" },
+{ id: 45, name: "Ajmi SteamMade Puttu Podi 1KG", price: 2.89, category: "Puttu Podi" },
+{ id: 46, name: "Ajmi Chemba Puttu Podi 1KG", price: 2.99, category: "Puttu Podi" },
+{ id: 47, name: "Ajmi Ragi Puttu Podi 500g", price: 1.79, category: "Puttu Podi" },
+{ id: 48, name: "FG Steamed White Puttu Podi 1KG", price: 2.59, category: "Puttu Podi" },
+{ id: 49, name: "FG Chemba Puttu Podi 1KG", price: 2.59, category: "Puttu Podi" },
+{ id: 50, name: "Mas Puttu Podi White 1KG", price: 2.59, category: "Puttu Podi" },
+{ id: 51, name: "Nirapara White Puttu Podi 1KG", price: 2.89, category: "Puttu Podi" },
+{ id: 52, name: "Nirapara Chemba Puttu Podi 1KG", price: 2.89, category: "Puttu Podi" },
+{ id: 53, name: "Palat Chemba Puttu Podi 1KG", price: 2.89, category: "Puttu Podi" },
+{ id: 54, name: "Double Horse Chemba Puttu Podi 1KG", price: 2.99, category: "Puttu Podi" },
+{ id: 55, name: "Palat Wheat Puttu Podi 1KG", price: 2.89, category: "Puttu Podi" },
+{ id: 56, name: "FG Wheat Puttu Podi 1KG", price: 2.59, category: "Puttu Podi" },
+{ id: 57, name: "Palat White Puttu Podi 5KG", price: 8.79, category: "Puttu Podi" },
+{ id: 58, name: "Ajmi Special Idiyappam Podi 1KG", price: 2.89, category: "Appam/Idiyappam Podi" },
+{ id: 59, name: "Palat Idiyappam Podi 1KG", price: 2.69, category: "Appam/Idiyappam Podi" },
+{ id: 60, name: "Palat Instant Pallappam Mix 1KG", price: 2.79, category: "Appam/Idiyappam Podi" },
+{ id: 61, name: "Double Horse Easy Idiyappam Powder 1KG + 200g Free", price: 2.99, category: "Appam/Idiyappam Podi" },
+{ id: 62, name: "Mayil Special Idiyappam Podi 1KG", price: 2.69, category: "Appam/Idiyappam Podi" },
+{ id: 63, name: "Mayil Easy Pallappam Mix 1KG", price: 2.69, category: "Appam/Idiyappam Podi" },
+{ id: 64, name: "Nirapara Chemba Idiyappam Podi 1KG", price: 2.89, category: "Appam/Idiyappam Podi" },
+{ id: 65, name: "Nirapara Appam Idiyappam Podi 1KG", price: 2.89, category: "Appam/Idiyappam Podi" },
+{ id: 66, name: "FG Idiyappam Podi 1KG", price: 2.59, category: "Appam/Idiyappam Podi" },
+{ id: 67, name: "FG Pathiri Podi 1KG", price: 2.59, category: "Pathiri Podi" },
+{ id: 68, name: "Palat Pathiri Podi 1KG", price: 2.89, category: "Pathiri Podi" },
+{ id: 69, name: "Ajmi Pathiri Podi 1KG", price: 2.89, category: "Pathiri Podi" },
+{ id: 70, name: "Niraparaa Pathiri Podi 1KG", price: 2.89, category: "Pathiri Podi" },
+{ id: 71, name: "FG Rice Powder 1KG", price: 2.59, category: "Pathiri Podi" },
+{ id: 72, name: "Palat Roasted Rice Powder 1KG", price: 2.59, category: "Pathiri Podi" },
+{ id: 73, name: "Ajmi Idly Podi 1KG", price: 2.99, category: "Idly Dosa Mix" },
+{ id: 74, name: "Palat Instant Idly Dosa Mix 1KG", price: 2.89, category: "Idly Dosa Mix" },
+{ id: 75, name: "Elite Rice Dosa Mix 1KG", price: 2.79, category: "Idly Dosa Mix" },
+{ id: 76, name: "Nirapara Dosa Podi 1KG", price: 2.89, category: "Idly Dosa Mix" },
+{ id: 77, name: "Ajmi Dosa Podi 1KG", price: 2.99, category: "Idly Dosa Mix" },
+{ id: 78, name: "FG Roasted Rava 1KG", price: 2.59, category: "Rava" },
+{ id: 79, name: "Palat Double Roasted Rava 1KG", price: 2.79, category: "Rava" },
+{ id: 80, name: "Palat Instant Upma Mix 1KG", price: 2.89, category: "Rava" },
+{ id: 81, name: "Ajmi Upma Rava 1KG", price: 2.89, category: "Rava" },
+{ id: 82, name: "Green Valley Idly Rava 1KG", price: 2.99, category: "Rava" },
+{ id: 83, name: "Green Valley Maida 1KG", price: 2.99, category: "Maida" },
+{ id: 84, name: "Palat Maida 1KG", price: 2.69, category: "Maida" },
+{ id: 85, name: "Palat Maida 5KG", price: 7.99, category: "Maida" },
+{ id: 86, name: "TRS Gram Flour 1KG", price: 2.19, category: "Maida" },
+{ id: 87, name: "KTC Gram Flour 2KG", price: 4.39, category: "Maida" },
+{ id: 88, name: "FG Cow Peas 1KG", price: 3.19, category: "Peas / Beans" },
+{ id: 89, name: "Palat Peas Red Payar 1KG", price: 3.19, category: "Peas / Beans" },
+{ id: 90, name: "FG Green Peas 1KG", price: 3.19, category: "Peas / Beans" },
+{ id: 91, name: "Palat Green Peas 1KG", price: 2.99, category: "Peas / Beans" },
+{ id: 92, name: "TRS Black Eye Beans 1KG", price: 2.99, category: "Peas / Beans" },
+{ id: 93, name: "TRS Red Kidney Beans 500g", price: 1.99, category: "Peas / Beans" },
+{ id: 94, name: "Natures Red Kidney Beans 500g", price: 2.19, category: "Peas / Beans" },
+{ id: 95, name: "FG Chana Black Kadala 1KG", price: 3.19, category: "Kadala" },
+{ id: 96, name: "Palat Bengal Gram Chana Kadala 1KG", price: 2.69, category: "Kadala" },
+{ id: 97, name: "Palat Chick Peas White (velutha kadala) 1KG", price: 3.29, category: "Kadala" },
+{ id: 98, name: "Green Valley Brown Chana 1KG (naadan kadala)", price: 3.29, category: "Kadala" },
+{ id: 99, name: "Green Naadan Velutha Kadala (chick peas) 1KG", price: 3.59, category: "Kadala" },
+{ id: 100, name: "Green Valley Naadan Cheru Payar (mung whole) 1KG", price: 3.59, category: "Dal" },
+{ id: 101, name: "Palat Cheru Payar (moog dal) 1KG", price: 3.59, category: "Dal" },
+{ id: 102, name: "FG Cheru Payar (moon dal) 1KG", price: 3.19, category: "Dal" },
+{ id: 103, name: "White Pearl Cheru Payar (moong whole) 500g", price: 1.49, category: "Dal" },
+{ id: 104, name: "White Pearl Cheru Payar (moong whole) 2KG", price: 4.99, category: "Dal" },
+{ id: 105, name: "FG Urid Dal 1KG", price: 3.19, category: "Dal" },
+{ id: 106, name: "Green Valley Naadan Uzhunnu (Urid Whole Cleaned) 1KG", price: 3.19, category: "Dal" },
+{ id: 107, name: "Palat Urid Dal Whole 1KG", price: 3.19, category: "Dal" },
+{ id: 108, name: "Palat Moong Dal (payasa parippu) 1KG", price: 3.29, category: "Dal" },
+{ id: 109, name: "FG Toor Dal 1KG", price: 3.19, category: "Dal" },
+{ id: 110, name: "Palat Toor Dal 1Kg", price: 3.19, category: "Dal" },
+{ id: 111, name: "Green Valley Masoor Dal (naadan chuvanna parippu) 1KG", price: 2.99, category: "Dal" },
+{ id: 112, name: "Palat Masoor Dal 1KG", price: 2.99, category: "Dal" },
+{ id: 113, name: "Green Valley Toor Dal (naadan sambar parippu) 1KG", price: 3.19, category: "Dal" },
+{ id: 114, name: "Mayil Ragi 1KG", price: 2.99, category: "Dal" },
+{ id: 115, name: "Maggi Coconut Milk Powder 1KG", price: 14.75, category: "Coconut Milk Powder/Milk" },
+{ id: 116, name: "Shankar Natural Coconut Milk Powder 1KG", price: 9.99, category: "Coconut Milk Powder/Milk" },
+{ id: 117, name: "Periyar Desiccated Coconut 500g", price: 4.19, category: "Coconut Milk Powder/Milk" },
+{ id: 118, name: "Chaokoh Coconut Milk 400ML", price: 1.89, category: "Coconut Milk Powder/Milk" },
+{ id: 119, name: "Sweetened Condensed Milk", price: 1.39, category: "Coconut Milk Powder/Milk" },
+{ id: 120, name: "Green Valley Soya Chunks (Big) 200g", price: 1.99, category: "Soya Chunks" },
+{ id: 121, name: "Green Valley Soya Chunks (small) 200g", price: 2.19, category: "Soya Chunks" },
+{ id: 122, name: "Palat Soya Chunks 200g", price: 1.99, category: "Soya Chunks" },
+{ id: 123, name: "Aashirvaad 10KG", price: 15.99, category: "Atta" },
+{ id: 124, name: "Aashirvaad 5KG", price: 9.99, category: "Atta" },
+{ id: 125, name: "Elite Chakki Atta 10KG", price: 14.99, category: "Atta" },
+{ id: 126, name: "Elite Chakki Atta 5KG", price: 8.99, category: "Atta" },
+{ id: 127, name: "Ajmi Chakki Atta 5KG", price: 9.99, category: "Atta" },
+{ id: 128, name: "Ajmi Chakki Atta 5KG", price: 4.59, category: "Atta" },
+{ id: 129, name: "Green Valley Banana Chips 250g (bottle)", price: 2.99, category: "Snacks" },
+{ id: 130, name: "Green Valley Tapioca Chips Round Spicy (bottle) 250g", price: 1.99, category: "Snacks" },
+{ id: 131, name: "Green Valley Tapioca Chips Long Cut (bottle) 200g", price: 2.19, category: "Snacks" },
+{ id: 132, name: "Green Valley Baby Murukku Spicy 250g (bottle)", price: 2.99, category: "Snacks" },
+{ id: 133, name: "Green Valley Pakkavada 160g (bottle)", price: 2.19, category: "Snacks" },
+{ id: 134, name: "Green Valley Cheeda Sweet 225g (bottle)", price: 2.19, category: "Snacks" },
+{ id: 135, name: "Green Valley Avalose Podi 400g (bottle)", price: 2.19, category: "Snacks" },
+{ id: 136, name: "Green Valley Achappam 230g (bottle)", price: 2.99, category: "Snacks" },
+{ id: 137, name: "Malabar Choice Achappam 170g", price: 2.99, category: "Snacks" },
+{ id: 138, name: "Pavizham Jackfruit Chips 200g", price: 2.59, category: "Snacks" },
+{ id: 139, name: "Pavizham Ripe Banana Chips 200g", price: 2.49, category: "Snacks" },
+{ id: 140, name: "Pavizham Banana Chips 200g", price: 2.49, category: "Snacks" },
+{ id: 141, name: "Pavizham Kerala Mixture Hot 200g", price: 1.99, category: "Snacks" },
+{ id: 142, name: "Pavizham Kerala Mixture 200g", price: 1.99, category: "Snacks" },
+{ id: 143, name: "Pavizham Bombay mixture 200g", price: 1.19, category: "Snacks" },
+{ id: 144, name: "Pavizham Cassava Chips Spicy 150g", price: 1.99, category: "Snacks" },
+{ id: 145, name: "Pavizham Cheeda Plain 200g", price: 1.99, category: "Snacks" },
+{ id: 146, name: "Pavizham Kuzhalappam 150g", price: 1.99, category: "Snacks" },
+{ id: 147, name: "Pavizham Ribbon Pakkavada 200g", price: 1.99, category: "Snacks" },
+{ id: 148, name: "Pavizham Cassava Stick Spicy 150g", price: 1.59, category: "Snacks" },
+{ id: 149, name: "Pavizham Sarkaravaratty 200g", price: 2.49, category: "Snacks" },
+{ id: 150, name: "Mariyam Jackfruit Chips 200g", price: 2.59, category: "Snacks" },
+{ id: 151, name: "Mariyam Sarkaravaratty 200g", price: 2.19, category: "Snacks" },
+{ id: 152, name: "Mariyam Tapioca Chips Spicy 125g", price: 1.99, category: "Snacks" },
+{ id: 153, name: "Mayil Pakkavada 150g", price: 1.99, category: "Snacks" },
+{ id: 154, name: "Mayil Sweet Cheeda 300g", price: 1.99, category: "Snacks" },
+{ id: 155, name: "Mayil Garlic Murruke 200g", price: 2.49, category: "Snacks" },
+{ id: 156, name: "Mayil Ripe Banana Chips 200g", price: 2.49, category: "Snacks" },
+{ id: 157, name: "Mayil Jackfruit Chips 200g (bottle)", price: 3.19, category: "Snacks" },
+{ id: 158, name: "Mayil Banana Chips 300g (bottle)", price: 3.19, category: "Snacks" },
+{ id: 159, name: "Mayil Kuzhalappam Sweet 200g (bottle)", price: 1.99, category: "Snacks" },
+{ id: 160, name: "Mayil Sesame Ball 200g (bottle)", price: 1.99, category: "Snacks" },
+{ id: 161, name: "Mayil Mixture Ball 200g (bottle)", price: 1.99, category: "Snacks" },
+{ id: 162, name: "Mayil Sesame Ball 200g", price: 1.99, category: "Snacks" },
+{ id: 163, name: "Malabar Choice Banana Chips 150g", price: 1.99, category: "Snacks" },
+{ id: 164, name: "Malabar Choice Jackfruit Chips 150g", price: 1.99, category: "Snacks" },
+{ id: 165, name: "Parle - G Original Family Pack 800g", price: 2.99, category: "Snacks" },
+{ id: 166, name: "Parle - G Original 90g", price: 0.69, category: "Snacks" },
+{ id: 167, name: "Maliban Spicy Crackers 170g", price: 0.89, category: "Snacks" },
+{ id: 168, name: "Kurkure Masala Munch 75g", price: 0.89, category: "Snacks" },
+{ id: 169, name: "Kurkure Green Chutney Style 75g", price: 0.89, category: "Snacks" },
+{ id: 170, name: "Kurkure Chilli Chaka 75g", price: 0.89, category: "Snacks" },
+{ id: 171, name: "Kurkure Naughty Tomato 75g", price: 0.89, category: "Snacks" },
+{ id: 172, name: "Lays India’s Magic Masala", price: 0.89, category: "Snacks" },
+{ id: 173, name: "Lays West Indie’s Hot n Sweet Chilli", price: 0.89, category: "Snacks" },
+{ id: 174, name: "Lays Chilli Limon Flavour", price: 0.89, category: "Snacks" },
+{ id: 175, name: "EasyPop Microwave Popcorn Salted", price: 0.69, category: "Snacks" },
+{ id: 176, name: "EasyPop Microwave Popcorn Sweet", price: 0.69, category: "Snacks" },
+{ id: 177, name: "Ritz Original Crackers", price: 1.49, category: "Snacks" },
+{ id: 178, name: "Kottaram Masala Biscuit", price: 2.99, category: "Snacks" },
+{ id: 179, name: "Ginni Monkey Nuts 120G", price: 0.65, category: "Snacks" },
+{ id: 180, name: "Toasted Corn Chili 120G", price: 0.95, category: "Snacks" },
+{ id: 181, name: "Elite Premium Elachi Rusk 480g", price: 3.99, category: "Snacks" },
+{ id: 182, name: "Elite Original Rusk 480g", price: 3.99, category: "Snacks" },
+{ id: 183, name: "Cake Rusk 550g", price: 3.99, category: "Snacks" },
+{ id: 184, name: "Britannia Wheat Toasty Rusk 610g", price: 2.99, category: "Snacks" },
+{ id: 185, name: "Kottaram Normal Rusk", price: 3.19, category: "Snacks" },
+{ id: 186, name: "Kottaram Milk Rusk", price: 3.49, category: "Snacks" },
+{ id: 187, name: "Balconi Mix Max", price: 1.75, category: "Snacks" },
+{ id: 188, name: "Balconi Tiramisu Cake", price: 2.49, category: "Snacks" },
+{ id: 189, name: "Ginni’s Roasted & Salted Pistachio Nuts", price: 1.19, category: "Snacks" },
+{ id: 190, name: "Britannia Goodday Pista/Badam 72G - 3 PCS", price: 1.29, category: "Snacks" },
+{ id: 191, name: "Sofra Cashews", price: 2.89, category: "Snacks" },
+{ id: 192, name: "Dry Roasted Peanuts", price: 0.75, category: "Snacks" },
+{ id: 193, name: "MD Saudi Shalby Dates 450G", price: 3.69, category: "Snacks" },
+{ id: 194, name: "Khudri Dates", price: 3.79, category: "Snacks" },
+{ id: 195, name: "Eastern Egg Masala 165 g", price: 1.99, category: "Masala" },
+{ id: 196, name: "Eastern Mutton Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 197, name: "Eastern Rasam Powder 165 g", price: 1.99, category: "Masala" },
+{ id: 198, name: "Eastern Beef Ularthu Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 199, name: "Eastern Chicken 65 Masala 50 g", price: 1.99, category: "Masala" },
+{ id: 200, name: "Eastern Chat Masala Powder 100 g", price: 1.99, category: "Masala" },
+{ id: 201, name: "Eastern Chicken Biriyani Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 202, name: "Eastern Chilli Chicken Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 203, name: "Eastern Chana Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 204, name: "Eastern Meat Masala 160 g", price: 1.99, category: "Masala" },
+{ id: 205, name: "Ajmi Chilli Powder 200 g", price: 1.99, category: "Masala" },
+{ id: 206, name: "Aachi Meat Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 207, name: "Aachi Mutton Masala 100g", price: 1.99, category: "Masala" },
+{ id: 208, name: "Aachi Fish Curry Masala 100 g", price: 1.99, category: "Masala" },
+{ id: 209, name: "Aachi Special Bombay Biriyani Masala 45 g", price: 1.99, category: "Masala" },
+{ id: 210, name: "Aachi Hyderabad Dum Biriyani Masala 45 g", price: 1.99, category: "Masala" },
+{ id: 211, name: "Aachi Thalassery Biriyani Masala 40g", price: 1.99, category: "Masala" },
+{ id: 212, name: "Aachi Dum Biriyani Masala 45 g", price: 1.99, category: "Masala" },
+{ id: 213, name: "Aachi Spicy Sambar Powder 100g", price: 1.99, category: "Masala" },
+{ id: 214, name: "Aachi Idicha Sambar Powder 100g", price: 1.99, category: "Masala" },
+{ id: 215, name: "Aachi Rasam 100g", price: 1.99, category: "Masala" },
+{ id: 216, name: "Aachi Garam Masala 100g", price: 1.99, category: "Masala" },
+{ id: 217, name: "Palat Chicken Masala 200g", price: 1.99, category: "Masala" },
+{ id: 218, name: "Palat Sambar Powder 200g", price: 1.99, category: "Masala" },
+{ id: 219, name: "Palat Garam Masala 200g", price: 1.99, category: "Masala" },
+{ id: 220, name: "Palat Meat Masala 200g", price: 1.99, category: "Masala" },
+{ id: 221, name: "Palat Fish Masala 200g", price: 1.99, category: "Masala" },
+{ id: 222, name: "Palat Rasam Powder 200g", price: 1.99, category: "Masala" },
+{ id: 223, name: "Palat Pickle Mix 200g", price: 1.99, category: "Masala" },
+{ id: 224, name: "Double Horse Sambhar Powder 140G", price: 2.19, category: "Masala" },
+{ id: 225, name: "Double Horse Sambar Powder 140G", price: 2.19, category: "Masala" },
+{ id: 226, name: "Double Horse Rasam Powder 140G", price: 2.19, category: "Masala" },
+{ id: 227, name: "Saras Coconut Varuthara GravyMix 200g", price: 3.69, category: "Masala" },
+{ id: 228, name: "Mayil Rasam Powder 200g", price: 2.19, category: "Masala" },
+{ id: 229, name: "Ajmi Chili Powder 1KG", price: 7.99, category: "Herbs/Spices" },
+{ id: 230, name: "Ajmi Chilli Powder 200g", price: 1.99, category: "Herbs/Spices" },
+{ id: 231, name: "Ajmi Kashmiri Chilli Powder 250g", price: 3.29, category: "Herbs/Spices" },
+{ id: 232, name: "Palat Kashmiri Chilli Powder 200 g", price: 2.99, category: "Herbs/Spices" },
+{ id: 233, name: "Palat Chilli Powder 500g", price: 5.59, category: "Herbs/Spices" },
+{ id: 234, name: "Eastern (EA) Chilli Powder (Eco) 500g", price: 5.99, category: "Herbs/Spices" },
+{ id: 235, name: "Nirapara Kashmiri Chilly Powder 500 g", price: 5.99, category: "Herbs/Spices" },
+{ id: 236, name: "Nirapara Coriander Powder 1 Kg", price: 6.59, category: "Herbs/Spices" },
+{ id: 237, name: "Nirapara Coriander Powder 500g", price: 3.99, category: "Herbs/Spices" },
+{ id: 238, name: "Green Valley Coriander Powder 500 g", price: 2.99, category: "Herbs/Spices" },
+{ id: 239, name: "Mayil Coriander Powder 500g", price: 3.99, category: "Herbs/Spices" },
+{ id: 240, name: "Palat Coriander Powder 500g", price: 4.29, category: "Herbs/Spices" },
+{ id: 241, name: "Mayil Turmeric Powder 400G", price: 2.99, category: "Herbs/Spices" },
+{ id: 242, name: "Palat Red Chilli Whole 200g", price: 3.69, category: "Herbs/Spices" },
+{ id: 243, name: "Palat Red Chilli Whole 100g", price: 1.89, category: "Herbs/Spices" },
+{ id: 244, name: "Green Valley Coriander Whole 300g", price: 1.99, category: "Herbs/Spices" },
+{ id: 245, name: "Palat Whole Masala Mix 200 g", price: 3.49, category: "Herbs/Spices" },
+{ id: 246, name: "Mayil Cinnamon Stick 100 g", price: 1.99, category: "Herbs/Spices" },
+{ id: 247, name: "Green Valley Cinnamon Stick 50g", price: 0.99, category: "Herbs/Spices" },
+{ id: 248, name: "Palat Cinnamon Stick 100g", price: 2.89, category: "Herbs/Spices" },
+{ id: 249, name: "Palat Nut Mace", price: 4.59, category: "Herbs/Spices" },
+{ id: 250, name: "Palat Star Anise 100g", price: 1.99, category: "Herbs/Spices" },
+{ id: 251, name: "Ajwain Seeds (Carom Seeds) 100g", price: 1.19, category: "Herbs/Spices" },
+{ id: 252, name: "Mayil Mustard 200g", price: 1.99, category: "Herbs/Spices" },
+{ id: 253, name: "Palat Fenugreek Whole 250g", price: 2.19, category: "Herbs/Spices" },
+{ id: 254, name: "Palat Fenugreek 100g", price: 1.19, category: "Herbs/Spices" },
+{ id: 255, name: "Palat Cumin 100g", price: 1.99, category: "Herbs/Spices" },
+{ id: 256, name: "Green Valley Cumin Seeds (Jeera) Whole 100g", price: 1.99, category: "Herbs/Spices" },
+{ id: 257, name: "Green Valley Cloves (Gramboo) 50 g", price: 1.49, category: "Herbs/Spices" },
+{ id: 258, name: "Cumin 500g", price: 4.99, category: "Herbs/Spices" },
+{ id: 259, name: "Palat Cloves 100g", price: 2.19, category: "Herbs/Spices" },
+{ id: 260, name: "Palat Fennel 100g", price: 1.29, category: "Herbs/Spices" },
+{ id: 261, name: "Palat Cardamom 25g", price: 1.59, category: "Herbs/Spices" },
+{ id: 262, name: "Natures Sesame Seeds Black", price: 1.19, category: "Herbs/Spices" },
+{ id: 263, name: "Natures Sesame Seeds White", price: 1.19, category: "Herbs/Spices" },
+{ id: 264, name: "Natures Turmeric Fing.", price: 1.19, category: "Herbs/Spices" },
+{ id: 265, name: "Palat Black Pepper Powder 100g", price: 1.99, category: "Herbs/Spices" },
+{ id: 266, name: "Palat Black Pepper 100g", price: 2.19, category: "Herbs/Spices" },
+{ id: 267, name: "Mayil Black Pepper Whole 200G", price: 3.99, category: "Herbs/Spices" },
+{ id: 268, name: "Palat Asafoetida Bar 100g", price: 2.39, category: "Herbs/Spices" },
+{ id: 269, name: "Mayil Kayam(Asafoetida) Cake 100G", price: 2.59, category: "Herbs/Spices" },
+{ id: 270, name: "Palat Asafoetida (Kayam) Powder 100 G", price: 2.99, category: "Herbs/Spices" },
+{ id: 271, name: "LG Asafoetida (Kayam)  Powder 50g", price: 1.99, category: "Herbs/Spices" },
+{ id: 272, name: "Palat Kudampuli Tamarind 400G", price: 3.59, category: "Herbs/Spices" },
+{ id: 273, name: "Green Valley Tamarind Block 200 g", price: 1.29, category: "Herbs/Spices" },
+{ id: 274, name: "Mariyam Tamarind 200G", price: 1.20, category: "Herbs/Spices" },
+{ id: 275, name: "Palat Dried Bitter Gourd (pavaka kondattom) 200g", price: 2.99, category: "Herbs/Spices" },
+{ id: 276, name: "Palat Dried Chilli Kondattam 100G", price: 1.99, category: "Herbs/Spices" },
+{ id: 277, name: "WP Crushed Chilli 50G", price: 0.99, category: "Herbs/Spices" },
+{ id: 278, name: "Crispy Fried Onion 400g", price: 3.19, category: "Herbs/Spices" },
+{ id: 279, name: "CL Whole Bay Leaves (Jar)", price: 2.59, category: "Herbs/Spices" },
+{ id: 280, name: "CL Rosemary", price: 3.19, category: "Herbs/Spices" },
+{ id: 281, name: "Kasuri Methi", price: 1.19, category: "Herbs/Spices" },
+{ id: 282, name: "Tasty Nibbles Fish Mango Curry 200g", price: 2.99, category: "Ready To Eat" },
+{ id: 283, name: "Tasty Nibbles Kerala Fish Curry W/Coco Milk (Tin) 185g", price: 2.99, category: "Ready To Eat" },
+{ id: 284, name: "Tasty Nibbles Meen Peera (Pouch) 200g", price: 2.99, category: "Ready To Eat" },
+{ id: 285, name: "Tasty Nibbles Kerala Fish Curry", price: 2.99, category: "Ready To Eat" },
+{ id: 286, name: "Tasty Nibbles Sardine (tin)", price: 2.99, category: "Ready To Eat" },
+{ id: 287, name: "Tasty Nibbles Anchovy", price: 2.69, category: "Ready To Eat" },
+{ id: 288, name: "Tandoori Plain Naan", price: 2.99, category: "Ready To Eat" },
+{ id: 289, name: "Romali Roti Family Pack", price: 3.99, category: "Ready To Eat" },
+{ id: 290, name: "Eastern Lemon Pickle 400 g", price: 1.99, category: "Pickles" },
+{ id: 291, name: "Eastern Mango Pickle 400 g", price: 1.99, category: "Pickles" },
+{ id: 292, name: "Palat White Vadukapuli Lemon Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 293, name: "Palat Kadu Mango Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 294, name: "Palat Cut Mango Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 295, name: "Palat White Lime Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 296, name: "Palat White Garlic Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 297, name: "Palat Lemon Pickle 400g", price: 2.19, category: "Pickles" },
+{ id: 298, name: "NI. Kadu Mango Pickle 400 g", price: 2.19, category: "Pickles" },
+{ id: 299, name: "NI. Hot Lime Pickle 400 g", price: 2.19, category: "Pickles" },
+{ id: 300, name: "Mayil Garlic Pickle 400G", price: 2.19, category: "Pickles" },
+{ id: 301, name: "Mayil Gourd Pickle", price: 2.19, category: "Pickles" },
+{ id: 302, name: "Mayil Gooseberry Pickle", price: 2.19, category: "Pickles" },
+{ id: 303, name: "FG Cut Mango Pickle 400g", price: 2.49, category: "Pickles" },
+{ id: 304, name: "FG Lime Pickle 400G", price: 2.49, category: "Pickles" },
+{ id: 305, name: "FG Garlic Pickle 400G", price: 2.49, category: "Pickles" },
+{ id: 306, name: "NI. Dates Pickle 400 g", price: 2.49, category: "Pickles" },
+{ id: 307, name: "NI. Cut Mango Pickle 1 KG", price: 3.19, category: "Pickles" },
+{ id: 308, name: "NI. Hot Lime Pickle 1 KG", price: 3.19, category: "Pickles" },
+{ id: 309, name: "Palat Tender Mango Pickle 1KG", price: 4.29, category: "Pickles" },
+{ id: 310, name: "Palat Kadu Mango Pickle 1KG", price: 4.29, category: "Pickles" },
+{ id: 311, name: "Palat Cut Mango Pickle 1KG", price: 4.29, category: "Pickles" },
+{ id: 312, name: "Palat Lime Pickle 1KG", price: 4.29, category: "Pickles" },
+{ id: 313, name: "Mayik Ginger Garlic Paste", price: 2.99, category: "Pickles" },
+{ id: 314, name: "Keerthi Nirmal Ginger Garlic Paste 1KG", price: 3.99, category: "Pickles" },
+{ id: 315, name: "Parachute Coconut Oil W/M Jar 200ML", price: 2.19, category: "Oil" },
+{ id: 316, name: "Parachute Coconut Oil W/M Jar 500 ML", price: 3.99, category: "Oil" },
+{ id: 317, name: "Palat Coconut Oil 1KG", price: 6.99, category: "Oil" },
+{ id: 318, name: "Keerthi Nirmal Coconut Oil 1KG", price: 6.99, category: "Oil" },
+{ id: 319, name: "Idhayam Sesame Oil 500ML", price: 4.99, category: "Oil" },
+{ id: 320, name: "Idhayam Sesame Oi 1L", price: 6.99, category: "Oil" },
+{ id: 321, name: "Idhayam Mantra Ground Oil", price: 5.99, category: "Oil" },
+{ id: 322, name: "F/Berio Extra Virg Oil 500ML", price: 6.99, category: "Oil" },
+{ id: 323, name: "Flora Sunflower Oil 2L", price: 4.99, category: "Oil" },
+{ id: 324, name: "KTC Sunflower Oil 3L", price: 6.99, category: "Oil" },
+{ id: 325, name: "KTC Sunflower Oil 1L", price: 1.99, category: "Oil" },
+{ id: 326, name: "KTC Vegetable Oil 5L", price: 7.99, category: "Oil" },
+{ id: 327, name: "Oil GRB Ghee 1L", price: 15.99, category: "Ghee" },
+{ id: 328, name: "Oil GRB Ghee 500ML", price: 8.99, category: "Ghee" },
+{ id: 329, name: "Khanum Butter Ghee 500G", price: 6.00, category: "Ghee" },
+{ id: 330, name: "Palat Vinegar 500ML", price: 1.99, category: "Vinegar & Rose Water" },
+{ id: 331, name: "Palat Vinegar 1L", price: 2.79, category: "Vinegar & Rose Water" },
+{ id: 332, name: "Sarson’s Vinegar", price: 1.49, category: "Vinegar & Rose Water" },
+{ id: 333, name: "TRS Rose Water", price: 1.19, category: "Vinegar & Rose Water" },
+{ id: 334, name: "DP Table Salt", price: 1.39, category: "Salt & Sugar" },
+{ id: 335, name: "Himalayan Pink Salt", price: 1.99, category: "Salt & Sugar" },
+{ id: 336, name: "Tata Salt Pouch 1 KG", price: 1.19, category: "Salt & Sugar" },
+{ id: 337, name: "Tata ‑ Rock Salt 1 KG", price: 1.19, category: "Salt & Sugar" },
+{ id: 338, name: "Sugar Candy", price: 1.99, category: "Salt & Sugar" },
+{ id: 339, name: "Pure Cane Sugar 500G", price: 0.99, category: "Salt & Sugar" },
+{ id: 340, name: "T&L Granulated Sugar 1KG", price: 1.29, category: "Salt & Sugar" },
+{ id: 341, name: "Billingtons Demerara Sugar 500 G", price: 1.99, category: "Salt & Sugar" },
+{ id: 342, name: "Tata Tea Ginger Chai 100G", price: 2.99, category: "Tea & Coffee & Powders" },
+{ id: 343, name: "PG Tea Original 80 S", price: 3.29, category: "Tea & Coffee & Powders" },
+{ id: 344, name: "Taj Mahal Tea (loose chai podi) 500G", price: 5.50, category: "Tea & Coffee & Powders" },
+{ id: 345, name: "Palat Coffee Powder (Nadan Coffee) 250 g", price: 3.99, category: "Tea & Coffee & Powders" },
+{ id: 346, name: "Nescafe Original 50G", price: 2.49, category: "Tea & Coffee & Powders" },
+{ id: 347, name: "Nido Milk Powder 400g", price: 6.59, category: "Tea & Coffee & Powders" },
+{ id: 348, name: "Boost", price: 5.99, category: "Tea & Coffee & Powders" },
+{ id: 349, name: "Bournvita", price: 5.49, category: "Tea & Coffee & Powders" },
+{ id: 350, name: "Palat Pineapple Jam Bottle 500g", price: 1.99, category: "Spreads" },
+{ id: 351, name: "Palat Mixed Fruit Jam 500 g", price: 1.99, category: "Spreads" },
+{ id: 352, name: "Nutella Spread 350G", price: 3.69, category: "Spreads" },
+{ id: 353, name: "B/In Pure Honey 227G", price: 1.49, category: "Spreads" },
+{ id: 354, name: "Mayil Maryoor Jaggery 1KG", price: 3.69, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 355, name: "Nirmal Jaggery Ball 1 KG", price: 3.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 356, name: "Palat Jaggery Powder", price: 3.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 357, name: "Green Valley Jaggery Round White 500g", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 358, name: "Green Valley Marayoor Jaggery Round 500g", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 359, name: "Green Valley Palm Jaggery (Karippetty) 400g", price: 2.49, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 360, name: "Nirmal Jaggery Powder 1KG", price: 3.29, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 361, name: "Mayil Palm Kalkandam 150g", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 362, name: "Palat Palm Candy (Kalkandam) 200g", price: 2.89, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 363, name: "Sago Seeds Medium", price: 1.59, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 364, name: "Palat Nadan Ada 400g", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 365, name: "Palat Rice Adda 200g", price: 1.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 366, name: "Green Valley Aval (Rice Flakes) White 400 g", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 367, name: "Green Valley Aval (Rice Flakes) Brown 400 g", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 368, name: "Palat White Aval 400g", price: 2.69, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 369, name: "NI. Instant Palada Mix 200 g", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 370, name: "NI. Instant Vermicelli Mix 200 g", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 371, name: "Bambino Vermicelli", price: 2.49, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 372, name: "Anil Roasted Short Vermicelli", price: 1.59, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 373, name: "Golden Unroast Vermicelli Pasta", price: 1.39, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 374, name: "Double Horse Vermicelli Kheer Mix 300G", price: 2.29, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 375, name: "Double Horse Rice Palada Payasam Mix 300G", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 376, name: "Palat Instant Palada Payasam 300g", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 377, name: "Palat Instant Semiya Payasam 300g", price: 2.19, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 378, name: "Palat Guruvayur Pappadam 200G", price: 1.99, category: "Jaggery/Ada/Payasam/Vermicelli" },
+{ id: 379, name: "Koka Noodles Cup Chicken 70G", price: 1.29, category: "Noodles & Pasta" },
+{ id: 380, name: "Maggi Noodles Special Masala 70G", price: 0.45, category: "Noodles & Pasta" },
+{ id: 381, name: "Maggi Chicken Noodles 71G", price: 0.45, category: "Noodles & Pasta" },
+{ id: 382, name: "Yippee Noodles", price: 0.59, category: "Noodles & Pasta" },
+{ id: 383, name: "Delverde Conchiglie Pasta", price: 1.29, category: "Noodles & Pasta" },
+{ id: 384, name: "Delverde Penne Rigate Pasta", price: 1.29, category: "Noodles & Pasta" },
+{ id: 385, name: "Delverde Eliche Pasta", price: 1.29, category: "Noodles & Pasta" },
+{ id: 386, name: "Delverde Farfalle Pasta", price: 1.29, category: "Noodles & Pasta" },
+{ id: 387, name: "Delverde Maccheroni Pasta", price: 1.29, category: "Noodles & Pasta" },
+{ id: 388, name: "Delverde Spaghetti 72", price: 1.29, category: "Noodles & Pasta" },
+{ id: 389, name: "Delverde Lasagne", price: 1.29, category: "Noodles & Pasta" },
+{ id: 390, name: "Amoy Dark Soy Sauce 150ML", price: 1.99, category: "Sauces/Flavourings/Colourings" },
+{ id: 391, name: "Maggi Hot & Sweet Sauce 400g", price: 2.59, category: "Sauces/Flavourings/Colourings" },
+{ id: 392, name: "Nandos Peri Peri Mix Sauce 125g", price: 2.49, category: "Sauces/Flavourings/Colourings" },
+{ id: 393, name: "OXO Chicken", price: 2.59, category: "Sauces/Flavourings/Colourings" },
+{ id: 394, name: "Preema Vanilla Flavour 28ML", price: 0.79, category: "Sauces/Flavourings/Colourings" },
+{ id: 395, name: "TRS Yellow Food Colour 25G", price: 0.99, category: "Sauces/Flavourings/Colourings" },
+{ id: 396, name: "TRS Deep Orange Food Colour 25G", price: 0.99, category: "Sauces/Flavourings/Colourings" },
+{ id: 397, name: "Pride Lemon Juice", price: 1.00, category: "Sauces/Flavourings/Colourings" },
+{ id: 398, name: "Elite Jackfruit Cake 700G", price: 7.99, category: "Plum Cakes & Others" },
+{ id: 399, name: "Elite Dates And Cashew Cake 600G", price: 7.99, category: "Plum Cakes & Others" },
+{ id: 400, name: "Elite Dates And Cashew 300G", price: 5.99, category: "Plum Cakes & Others" },
+{ id: 401, name: "Elite Plum Surprise 800G", price: 7.99, category: "Plum Cakes & Others" },
+{ id: 402, name: "Elite Plum Surprise Cake 400g", price: 4.99, category: "Plum Cakes & Others" },
+{ id: 403, name: "Elite Carrot Cake 600G", price: 7.99, category: "Plum Cakes & Others" },
+{ id: 404, name: "Elite Dates Cake 600G", price: 7.99, category: "Plum Cakes & Others" },
+{ id: 405, name: "Elite Rich Plum Cake 1KG", price: 10.99, category: "Plum Cakes & Others" },
+{ id: 406, name: "Elite Rich Plum Cake 500G", price: 6.99, category: "Plum Cakes & Others" },
+{ id: 407, name: "Kottaram Plum Cake 400g", price: 4.79, category: "Plum Cakes & Others" },
+{ id: 408, name: "Kottaram Plum Cake 700g", price: 6.99, category: "Plum Cakes & Others" },
+{ id: 409, name: "Ajmi Plum Cake 400g", price: 4.99, category: "Plum Cakes & Others" },
+{ id: 410, name: "Ajmi Plum Cake 700g", price: 7.19, category: "Plum Cakes & Others" },
+{ id: 411, name: "Daily Delight Plum Cake 700g", price: 6.49, category: "Plum Cakes & Others" },
+{ id: 412, name: "Tuna Fish 600g", price: 6.99, category: "Frozen Fish" },
+{ id: 413, name: "Karimeen 600g", price: 6.99, category: "Frozen Fish" },
+{ id: 414, name: "King Fish Supreme 1KG", price: 12.99, category: "Frozen Fish" },
+{ id: 415, name: "King Fish Steaks 1KG", price: 14.50, category: "Frozen Fish" },
+{ id: 416, name: "Tuna Fish 600g", price: 6.99, category: "Frozen Fish" },
+{ id: 417, name: "Karimeen 600g", price: 6.99, category: "Frozen Fish" },
+{ id: 418, name: "MC. Mackerel Whole (Frozen) 600g", price: 4.49, category: "Frozen Fish" },
+{ id: 419, name: "MC. Indian Mackerel Dressed 600g", price: 4.49, category: "Frozen Fish" },
+{ id: 420, name: "Mackerel Headless 600G", price: 4.49, category: "Frozen Fish" },
+{ id: 421, name: "Marlin Cubes", price: 5.79, category: "Frozen Fish" },
+{ id: 422, name: "MC. Sardine Dressed 600g", price: 3.99, category: "Frozen Fish" },
+{ id: 423, name: "MC. Anchovy Dressed Big 600g", price: 4.19, category: "Frozen Fish" },
+{ id: 424, name: "MC. Anchovy Small Headless 600g", price: 4.19, category: "Frozen Fish" },
+{ id: 425, name: "ID. Tapioca Drums (Frozen) 900g", price: 2.79, category: "Frozen Tapioca (Kappa)" },
+{ id: 426, name: "ID. Tapioca Cuts (Frozen) 900g", price: 2.79, category: "Frozen Tapioca (Kappa)" },
+{ id: 427, name: "DD Tapioca Sliced 908g", price: 2.99, category: "Frozen Tapioca (Kappa)" },
+{ id: 428, name: "DD Tapioca Whole 908g", price: 2.99, category: "Frozen Tapioca (Kappa)" },
+{ id: 429, name: "ID. Tapioca Cuts Family Pack 2 KG", price: 4.19, category: "Frozen Tapioca (Kappa)" },
+{ id: 430, name: "Ajmi Tapioca Sliced 908g", price: 2.89, category: "Frozen Tapioca (Kappa)" },
+{ id: 431, name: "Ajmi Malabar Porotta 330g", price: 1.99, category: "Frozen Porotta & More" },
+{ id: 432, name: "Ajmi Malabar Porotta (Family Pack) 908g", price: 3.99, category: "Frozen Porotta & More" },
+{ id: 433, name: "ID. Malabar Porotta (Frozen) 300g", price: 1.99, category: "Frozen Porotta & More" },
+{ id: 434, name: "ID. Restaurant Porotta 1.5 KG", price: 5.49, category: "Frozen Porotta & More" },
+{ id: 435, name: "Ammachies Malabar Porota 908g", price: 3.79, category: "Frozen Porotta & More" },
+{ id: 436, name: "Ammachies Catering Porota 1.5 KG", price: 5.49, category: "Frozen Porotta & More" },
+{ id: 437, name: "NIL. Restaurant Porotta (Frzn) 1.5 KG", price: 4.99, category: "Frozen Porotta & More" },
+{ id: 438, name: "KK. Restaurant Porotta (Frzn) 1.5 KG", price: 4.99, category: "Frozen Porotta & More" },
+{ id: 439, name: "Shana Garlic Paratha", price: 2.29, category: "Frozen Porotta & More" },
+{ id: 440, name: "Shana Aloo Paratha", price: 2.99, category: "Frozen Porotta & More" },
+{ id: 441, name: "Chappathi Family Pack 908G", price: 4.29, category: "Frozen Porotta & More" },
+{ id: 442, name: "Idiyappam 908g", price: 4.59, category: "Frozen Porotta & More" },
+{ id: 443, name: "Unniyappam 350g", price: 2.79, category: "Frozen Snacks" },
+{ id: 444, name: "Paripuvada 350g", price: 2.79, category: "Frozen Snacks" },
+{ id: 445, name: "Uzhunnuvada 908g", price: 5.99, category: "Frozen Snacks" },
+{ id: 446, name: "Kozhukatta 350g", price: 2.59, category: "Frozen Snacks" },
+{ id: 447, name: "Unniyappam 1KG", price: 4.99, category: "Frozen Snacks" },
+{ id: 448, name: "Uzhunnuvada 1KG", price: 5.49, category: "Frozen Snacks" },
+{ id: 449, name: "Kumbilappam 400g", price: 2.79, category: "Frozen Snacks" },
+{ id: 450, name: "Neyyappam Family 750G", price: 4.99, category: "Frozen Snacks" },
+{ id: 451, name: "Red Halva 500g", price: 2.99, category: "Frozen Snacks" },
+{ id: 452, name: "Black Halva 500g", price: 2.99, category: "Frozen Snacks" },
+{ id: 453, name: "Laddu", price: 2.79, category: "Frozen Snacks" },
+{ id: 454, name: "Vattayappam", price: 2.79, category: "Frozen Snacks" },
+{ id: 455, name: "Unnakkaya", price: 2.79, category: "Frozen Snacks" },
+{ id: 456, name: "Elayada", price: 2.79, category: "Frozen Snacks" },
+{ id: 457, name: "Banana Fry 400G", price: 2.79, category: "Frozen Snacks" },
+{ id: 458, name: "Banana Fry 1KG", price: 5.49, category: "Frozen Snacks" },
+{ id: 459, name: "Kallappam 908G", price: 4.79, category: "Frozen Snacks" },
+{ id: 460, name: "Veg Spring Roll 350G", price: 2.99, category: "Frozen Snacks" },
+{ id: 461, name: "Vada With Chutney 350G", price: 2.99, category: "Frozen Snacks" },
+{ id: 462, name: "Veg Samosa", price: 2.99, category: "Frozen Snacks" },
+{ id: 463, name: "Veg Samosa Family", price: 3.99, category: "Frozen Snacks" },
+{ id: 464, name: "Shana Punjabi Samsosa 1180G", price: 7.49, category: "Frozen Snacks" },
+{ id: 465, name: "Kaya Mezhukkupuratty", price: 2.79, category: "Frozen Vegetables" },
+{ id: 466, name: "Cheera Thoran Green", price: 2.79, category: "Frozen Vegetables" },
+{ id: 467, name: "Kovakka Thoran", price: 2.79, category: "Frozen Vegetables" },
+{ id: 468, name: "Achinga Mezhukkupuratty", price: 2.79, category: "Frozen Vegetables" },
+{ id: 469, name: "Pavakka Thoran", price: 2.79, category: "Frozen Vegetables" },
+{ id: 470, name: "Sambar", price: 2.79, category: "Frozen Vegetables" },
+{ id: 471, name: "Shallots Frozen", price: 2.79, category: "Frozen Vegetables" },
+{ id: 472, name: "Sambar Mix", price: 2.79, category: "Frozen Vegetables" },
+{ id: 473, name: "Cut Mango Frozen", price: 2.79, category: "Frozen Vegetables" },
+{ id: 474, name: "Chinese Potato Frozen", price: 2.79, category: "Frozen Vegetables" },
+{ id: 475, name: "Frooti", price: 0.99, category: "Drinks" },
+{ id: 476, name: "Rubicon Mango Sparkle 330ML", price: 0.99, category: "Drinks" },
+{ id: 477, name: "Rubicon Spk Mango 2LTR", price: 1.79, category: "Drinks" },
+{ id: 478, name: "Sunexotic Juice", price: 1.39, category: "Drinks" },
+{ id: 479, name: "Rubicon Still Guava 1LTR", price: 1.59, category: "Drinks" },
+{ id: 480, name: "Rubicon Mango 1LTR", price: 1.59, category: "Drinks" },
+{ id: 481, name: "Kirkland Coconut 330ML", price: 2.19, category: "Drinks" },
+{ id: 482, name: "Kirkland Coconut Water 1L", price: 3.19, category: "Drinks" },
+{ id: 483, name: "Starbucks Frappuccino", price: 2.20, category: "Drinks" },
+{ id: 484, name: "Coca‑Cola 1.75LTR", price: 2.79, category: "Drinks" },
+{ id: 485, name: "Irn‑Bru 2LTR", price: 1.89, category: "Drinks" },
+{ id: 486, name: "Fanta Orange 2LTR", price: 2.15, category: "Drinks" },
+{ id: 487, name: "Lucozade Sport Orange 4Pack 500ML", price: 4.00, category: "Drinks" },
+{ id: 488, name: "Green Plantain", price: 2.99, category: "Fresh Vegetable" },
+{ id: 489, name: "Long Beans", price: 4.49, category: "Fresh Vegetable" },
+{ id: 490, name: "Spinach Leaves (cheera)", price: 3.49, category: "Fresh Vegetable" },
+{ id: 491, name: "Green Spinach", price: 1.99, category: "Fresh Vegetable" },
+{ id: 492, name: "Curry Leaves Fresh", price: 0.99, category: "Fresh Vegetable" },
+{ id: 493, name: "Coriander Leaves Fresh", price: 0.99, category: "Fresh Vegetable" },
+{ id: 494, name: "Spring Onion", price: 0.99, category: "Fresh Vegetable" },
+{ id: 495, name: "Mint Leaves Fresh", price: 0.99, category: "Fresh Vegetable" },
+{ id: 496, name: "Drum Stickleaves (muringa ela)", price: 3.49, category: "Fresh Vegetable" },
+{ id: 497, name: "Okra", price: 7.49, category: "Fresh Vegetable" },
+{ id: 498, name: "Snake Gourd", price: 6.99, category: "Fresh Vegetable" },
+{ id: 499, name: "Green Chilly Loose", price: 7.49, category: "Fresh Vegetable" },
+{ id: 500, name: "Karela / Pavaka", price: 4.99, category: "Fresh Vegetable" },
+{ id: 501, name: "Coconut Fresh Husked", price: 1.19, category: "Fresh Vegetable" },
+{ id: 502, name: "Drumstick", price: 6.99, category: "Fresh Vegetable" },
+{ id: 503, name: "Garlic Fresh", price: 1.99, category: "Fresh Vegetable" },
+{ id: 504, name: "African Yam", price: 2.49, category: "Fresh Vegetable" },
+{ id: 505, name: "YAM Elephant", price: 3.99, category: "Fresh Vegetable" },
+{ id: 506, name: "Red Pumpkin", price: 3.49, category: "Fresh Vegetable" },
+{ id: 507, name: "Sweet Potato Red", price: 3.49, category: "Fresh Vegetable" },
+{ id: 508, name: "Sweet Potato White", price: 3.99, category: "Fresh Vegetable" },
+{ id: 509, name: "Tropical Kappa / Cassava", price: 3.99, category: "Fresh Vegetable" },
+{ id: 510, name: "Ginger Fresh Loose", price: 3.99, category: "Fresh Vegetable" },
+{ id: 511, name: "Tomato Fresh", price: 3.99, category: "Fresh Vegetable" },
+{ id: 512, name: "Bombay Onion", price: 3.99, category: "Fresh Vegetable" },
+{ id: 513, name: "Egg Plant Green", price: 4.99, category: "Fresh Vegetable" },
+{ id: 514, name: "African Eddoes", price: 5.99, category: "Fresh Vegetable" },
+{ id: 515, name: "Aubergines", price: 2.99, category: "Fresh Vegetable" },
+{ id: 516, name: "Beetroot", price: 1.99, category: "Fresh Vegetable" },
+{ id: 517, name: "Matoka Vegetable", price: 4.49, category: "Fresh Vegetable" },
+{ id: 518, name: "Brinjal Kathirikka", price: 6.99, category: "Fresh Vegetable" },
+{ id: 519, name: "Churaka", price: 6.99, category: "Fresh Vegetable" },
+{ id: 520, name: "Courgettes", price: 2.99, category: "Fresh Vegetable" },
+{ id: 521, name: "Cucumber - Vellarika", price: 6.99, category: "Fresh Vegetable" },
+{ id: 522, name: "Fresh Turmeric", price: 6.99, category: "Fresh Vegetable" },
+{ id: 523, name: "Lemon", price: 0.50, category: "Fresh Vegetable" },
+{ id: 524, name: "Limes", price: 0.55, category: "Fresh Vegetable" },
+{ id: 525, name: "Mango Raw", price: 5.99, category: "Fresh Vegetable" },
+{ id: 526, name: "Turiya Vegetable", price: 5.99, category: "Fresh Vegetable" },
+{ id: 527, name: "Apple Banana/ Cherupazam", price: 6.99, category: "Fresh Fruits" },
+{ id: 528, name: "Yellow Plantain", price: 2.99, category: "Fresh Fruits" },
+{ id: 529, name: "Green Plantain", price: 2.99, category: "Fresh Fruits" },
+{ id: 530, name: "Small Guava", price: 0.99, category: "Fresh Fruits" },
+{ id: 531, name: "African Yam", price: 2.49, category: "Fresh Fruits" },
+{ id: 532, name: "YAM Elephant", price: 3.99, category: "Fresh Fruits" },
+{ id: 533, name: "Tropical Kappa/Casava", price: 3.99, category: "Fresh Fruits" },
+{ id: 534, name: "Amla/ Gooseberry", price: 2.69, category: "Fresh Fruits" },
+{ id: 535, name: "Papaya Green", price: 4.99, category: "Fresh Fruits" },
+{ id: 536, name: "Raw Mango", price: 5.99, category: "Fresh Fruits" },
+{ id: 537, name: "Banana Flower", price: 5.99, category: "Fresh Fruits" },
+{ id: 538, name: "Mango Raw", price: 5.99, category: "Fresh Fruits" },
+{ id: 539, name: "Ripe Papaya", price: 5.99, category: "Fresh Fruits" },
+{ id: 540, name: "Guava Fresh", price: 6.49, category: "Fresh Fruits" },
+
+
+  
+];
+
+let currentCategory = 'All';
+
+function getCategories() {
+  const cats = new Set(PRODUCTS.map(p => p.category).filter(Boolean));
+  return ['All', ...Array.from(cats).sort()];
+}
+
+function formatPrice(p) {
+  return '£' + (Math.round(p * 100) / 100).toFixed(2);
+}
+
+function renderCategories() {
+  const container = document.getElementById('categories');
+  container.innerHTML = '';
+  getCategories().forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (cat === currentCategory ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function renderProducts() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const grid = document.getElementById('products');
+  grid.innerHTML = '';
+
+  let filtered = PRODUCTS.slice();
+  if (currentCategory !== 'All')
+    filtered = filtered.filter(p => p.category === currentCategory);
+
+  if (q)
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(q));
+
+  document.getElementById('count').textContent =
+    filtered.length + ' products found' + (currentCategory !== 'All' ? ' in ' + currentCategory : '');
+  document.getElementById('resultCounter').textContent = filtered.length + ' items';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div style="padding:30px;color:var(--muted);font-weight:700">No products found.</div>';
+    return;
+  }
+
+  filtered.forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${p.name}</h3>
+      <div class="price">${formatPrice(p.price)}</div>
+      <div class="badge">${p.category}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+renderCategories();
+renderProducts();
+</script>
+
+</body>
+</html>
